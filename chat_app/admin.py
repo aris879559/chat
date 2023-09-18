@@ -7,6 +7,12 @@ admin.site.site_header = '大江狗管理后台'  # 设置header
 admin.site.site_title = '大江狗管理后台'  # 设置title
 admin.site.index_title = '大江狗管理后台'
 
-from .models import Task
+from .models import Task, Status
 
-admin.site.register(Task)
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status_text')
+
+    def status_text(self, obj):
+        return dict(Status.choices)[obj.status]
+    status_text.short_description = '任务状态'
