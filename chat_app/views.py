@@ -12,3 +12,5 @@ def dashboard(request):
 
     context = {'user_count': user_count, 'task_count': task_count}
     return render(request, 'dashboard.html', context)
+
+

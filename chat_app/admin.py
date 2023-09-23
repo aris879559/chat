@@ -12,7 +12,10 @@ from django.utils.html import format_html
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('colored_name', 'status_text')
+    list_display = ('colored_name',  'status')
+    search_fields = ('name',)
+    list_filter = ('status',)
+    list_editable =  ('status',)
 
     def colored_name(self, obj):
         color_code = 'black'
@@ -25,9 +28,16 @@ class TaskAdmin(admin.ModelAdmin):
         return format_html('<span style="color: {};">{}</span>', color_code, obj.name)
     colored_name.short_description = '任务名称'
 
-    def status_text(self, obj):
-        return dict(Status.choices)[obj.status]
-    status_text.short_description = '任务状态'
+    # def status_text(self, obj):
+    #     return dict(Status.choices)[obj.status]
+    #
+    # status_text.short_description = '任务状态'
+    def save_model(self, request, obj, form, change):
+        # 更新相应的模型实例
+        obj.status_text = dict(Status.choices).get(obj.status)
+        obj.status = form.cleaned_data['status']
+        obj.save()
+
 
 
 
